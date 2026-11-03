@@ -82,7 +82,7 @@
 - [x] Dependencies installed: Three.js (`^0.170.0`) and Vite (`^5.4.14`).
 - [x] Production build tested and verified (`npm run build` compiles cleanly).
 - [x] Local development server running and tested at `http://localhost:3000/`.
-- [x] Git repository initialized, `.gitignore` created, remote origin configured to `https://github.com/Gourav14-code/littlecrewwash.git`.
+- [x] Git repository initialized, `.gitignore` created, remote origin configured to `https://github.com/Gourav14-code/littlecrewwash.git`, and all commits successfully pushed to `origin/main`.
 - [x] Stylized 3D models created:
   - `src/entities/CarPlaceholder.js`: Three-box four-door sedan silhouette (hood, cabin, trunk, 4 doors with handles, headlights, taillights, wheels).
   - `src/entities/CharacterPlaceholder.js`: Jointed wash crew character with hierarchical limb pivots.

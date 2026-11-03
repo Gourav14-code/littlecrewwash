@@ -1,213 +1,271 @@
 import * as THREE from 'three';
 
 /**
- * Creates a stylized sedan placeholder using lightweight procedural geometry.
- * Well-proportioned dimensions: ~4.4m length, 1.85m width, 1.45m height.
+ * Creates an unmistakable stylized four-door sedan using clean low-poly geometry.
+ * Follows the classic "three-box" automotive silhouette:
+ * 1. Low elongated bonnet (engine bay)
+ * 2. Sloped passenger cabin (windshield, roof, rear window)
+ * 3. Stepped horizontal rear trunk (boot)
+ *
+ * Dimensions: 4.45m length, 1.80m width, 1.40m height, ground clearance ~0.2m.
  */
 export function createCar() {
   const car = new THREE.Group();
+  car.name = 'SedanCar';
 
-  // Shared stylized materials
+  // --- Stylized Materials ---
   const bodyPaintMat = new THREE.MeshStandardMaterial({
-    color: 0x1976d2, // Vibrant stylized blue
-    metalness: 0.25,
-    roughness: 0.35
+    color: 0x1d63b8, // Crisp classic automotive blue
+    metalness: 0.35,
+    roughness: 0.3
   });
 
-  const bodyTrimMat = new THREE.MeshStandardMaterial({
-    color: 0x151c24, // Dark bumper / undercarriage trim
+  const bodyUndertrimMat = new THREE.MeshStandardMaterial({
+    color: 0x161c24, // Dark grey rocker panels and lower lip
     roughness: 0.8
   });
 
   const glassMat = new THREE.MeshStandardMaterial({
-    color: 0x212b36,
-    metalness: 0.7,
-    roughness: 0.1,
+    color: 0x1a2530, // Deep tinted automotive glass
+    metalness: 0.65,
+    roughness: 0.15,
     transparent: true,
-    opacity: 0.85
+    opacity: 0.88
   });
 
   const tireMat = new THREE.MeshStandardMaterial({
-    color: 0x1a1a1a,
-    roughness: 0.9
+    color: 0x1e1e1e, // Matte rubber tire
+    roughness: 0.95
   });
 
   const rimMat = new THREE.MeshStandardMaterial({
-    color: 0xd0d5dd,
-    metalness: 0.8,
-    roughness: 0.2
+    color: 0xdde2ea, // Silver five-spoke alloy rim
+    metalness: 0.75,
+    roughness: 0.25
+  });
+
+  const chromeMat = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    metalness: 0.9,
+    roughness: 0.1
   });
 
   const headlightMat = new THREE.MeshStandardMaterial({
-    color: 0xfff8e1,
-    emissive: 0xffecb3,
-    emissiveIntensity: 0.8,
+    color: 0xfffaed,
+    emissive: 0xfff3d6,
+    emissiveIntensity: 0.9,
     roughness: 0.2
   });
 
   const taillightMat = new THREE.MeshStandardMaterial({
-    color: 0xd32f2f,
-    emissive: 0xc62828,
-    emissiveIntensity: 0.7,
+    color: 0xe53935,
+    emissive: 0xd32f2f,
+    emissiveIntensity: 0.8,
     roughness: 0.2
   });
 
-  // 1. Lower Chassis & Bumpers
-  const chassis = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.45, 4.35), bodyPaintMat);
-  chassis.position.y = 0.48;
-  chassis.castShadow = true;
-  chassis.receiveShadow = true;
-  car.add(chassis);
+  const mirrorMat = new THREE.MeshStandardMaterial({
+    color: 0x134882,
+    roughness: 0.4
+  });
 
-  // Front bumper trim
-  const frontBumper = new THREE.Mesh(new THREE.BoxGeometry(1.84, 0.22, 0.2), bodyTrimMat);
-  frontBumper.position.set(0, 0.35, 2.15);
+  // --- 1. Lower Chassis & Floorpan (Sits low to ground like a real sedan) ---
+  const chassisBase = new THREE.Mesh(new THREE.BoxGeometry(1.76, 0.32, 4.35), bodyPaintMat);
+  chassisBase.position.y = 0.44;
+  chassisBase.castShadow = true;
+  chassisBase.receiveShadow = true;
+  car.add(chassisBase);
+
+  // Dark lower rocker sill trim
+  const rockerTrim = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.14, 4.36), bodyUndertrimMat);
+  rockerTrim.position.y = 0.26;
+  rockerTrim.castShadow = true;
+  car.add(rockerTrim);
+
+  // --- 2. Box 1: Low Elongated Front Bonnet (Engine Bay) ---
+  const hood = new THREE.Mesh(new THREE.BoxGeometry(1.74, 0.18, 1.42), bodyPaintMat);
+  hood.position.set(0, 0.68, 1.44);
+  hood.rotation.x = 0.045; // Gentle aerodynamic slope
+  hood.castShadow = true;
+  car.add(hood);
+
+  // Front bumper & grille assembly
+  const frontBumper = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.26, 0.2), bodyPaintMat);
+  frontBumper.position.set(0, 0.42, 2.18);
   frontBumper.castShadow = true;
   car.add(frontBumper);
 
-  // Rear bumper trim
-  const rearBumper = new THREE.Mesh(new THREE.BoxGeometry(1.84, 0.22, 0.2), bodyTrimMat);
-  rearBumper.position.set(0, 0.35, -2.15);
-  rearBumper.castShadow = true;
-  car.add(rearBumper);
+  const grille = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.14, 0.05), bodyUndertrimMat);
+  grille.position.set(0, 0.46, 2.29);
+  car.add(grille);
 
-  // 2. Bonnet (Hood)
-  const bonnet = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.18, 1.25), bodyPaintMat);
-  bonnet.position.set(0, 0.76, 1.45);
-  bonnet.rotation.x = 0.05; // slight forward slope
-  bonnet.castShadow = true;
-  car.add(bonnet);
+  // Chrome grille badge
+  const badge = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.06, 0.06), chromeMat);
+  badge.position.set(0, 0.46, 2.31);
+  car.add(badge);
 
-  // 3. Cabin & Roof (Stylized greenhouse)
-  const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.68, 0.58, 2.05), glassMat);
-  cabin.position.set(0, 1.05, -0.15);
-  cabin.castShadow = true;
-  car.add(cabin);
+  // Front air intake lower slot
+  const lowerGrille = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.08, 0.05), bodyUndertrimMat);
+  lowerGrille.position.set(0, 0.32, 2.29);
+  car.add(lowerGrille);
 
-  // Roof panel
-  const roof = new THREE.Mesh(new THREE.BoxGeometry(1.62, 0.08, 1.65), bodyPaintMat);
-  roof.position.set(0, 1.36, -0.22);
+  // --- 3. Box 2: Passenger Cabin (Greenhouse with clear sedan proportions) ---
+  // Windshield (raked back from hood)
+  const windshield = new THREE.Mesh(new THREE.BoxGeometry(1.64, 0.48, 0.62), glassMat);
+  windshield.position.set(0, 0.94, 0.62);
+  windshield.rotation.x = -0.68; // ~39 degree rake angle
+  windshield.castShadow = true;
+  car.add(windshield);
+
+  // Cabin side windows & main greenhouse
+  const cabinCore = new THREE.Mesh(new THREE.BoxGeometry(1.64, 0.52, 1.65), glassMat);
+  cabinCore.position.set(0, 0.98, -0.22);
+  cabinCore.castShadow = true;
+  car.add(cabinCore);
+
+  // Sedan Roof Panel
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(1.58, 0.06, 1.48), bodyPaintMat);
+  roof.position.set(0, 1.25, -0.24);
   roof.castShadow = true;
   car.add(roof);
 
-  // Windshield pillars (A-pillars)
-  const aPillarL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.55, 0.08), bodyPaintMat);
-  aPillarL.position.set(-0.78, 1.02, 0.72);
-  aPillarL.rotation.x = -0.45;
-  car.add(aPillarL);
+  // Rear Window (slopes down toward trunk)
+  const rearWindow = new THREE.Mesh(new THREE.BoxGeometry(1.62, 0.44, 0.58), glassMat);
+  rearWindow.position.set(0, 0.95, -1.08);
+  rearWindow.rotation.x = 0.65; // ~37 degree rake angle
+  rearWindow.castShadow = true;
+  car.add(rearWindow);
 
-  const aPillarR = aPillarL.clone();
-  aPillarR.position.x = 0.78;
-  car.add(aPillarR);
+  // B-Pillars (Center door dividers between front and rear passenger doors)
+  const bPillarL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.5, 0.1), bodyUndertrimMat);
+  bPillarL.position.set(-0.82, 0.98, -0.22);
+  car.add(bPillarL);
 
-  // Rear pillars (C-pillars)
-  const cPillarL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.55, 0.16), bodyPaintMat);
-  cPillarL.position.set(-0.78, 1.05, -1.05);
-  cPillarL.rotation.x = 0.38;
-  car.add(cPillarL);
+  const bPillarR = bPillarL.clone();
+  bPillarR.position.x = 0.82;
+  car.add(bPillarR);
 
-  const cPillarR = cPillarL.clone();
-  cPillarR.position.x = 0.78;
-  car.add(cPillarR);
+  // --- 4. Box 3: Distinct Stepped Rear Trunk (Boot) ---
+  // Notice the distinct horizontal step-down from rear glass to the trunk deck lid!
+  const trunkLid = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.16, 0.98), bodyPaintMat);
+  trunkLid.position.set(0, 0.72, -1.68);
+  trunkLid.rotation.x = -0.02; // Flat horizontal sedan trunk deck
+  trunkLid.castShadow = true;
+  car.add(trunkLid);
 
-  // 4. Trunk (Boot)
-  const trunk = new THREE.Mesh(new THREE.BoxGeometry(1.76, 0.22, 0.95), bodyPaintMat);
-  trunk.position.set(0, 0.74, -1.65);
-  trunk.castShadow = true;
-  car.add(trunk);
+  // Rear bumper
+  const rearBumper = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.28, 0.22), bodyPaintMat);
+  rearBumper.position.set(0, 0.43, -2.18);
+  rearBumper.castShadow = true;
+  car.add(rearBumper);
 
-  // 5. Doors & Side Windows Indentation (Visual Door Trim)
-  const doorLineMat = new THREE.MeshBasicMaterial({ color: 0x0d47a1 });
-  // Left door seam
-  const doorSeamL = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.52, 0.02), doorLineMat);
-  doorSeamL.position.set(-0.92, 0.52, -0.15);
-  car.add(doorSeamL);
-
-  // Right door seam
-  const doorSeamR = doorSeamL.clone();
-  doorSeamR.position.x = 0.92;
-  car.add(doorSeamR);
-
-  // Door handles
-  const handleGeo = new THREE.BoxGeometry(0.04, 0.03, 0.14);
+  // --- 5. Four Doors (Front & Rear Door Shutlines and Handles) ---
+  const handleGeo = new THREE.BoxGeometry(0.04, 0.035, 0.12);
   const handleMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.6 });
+
+  // Left Front Door Handle
   const handleFL = new THREE.Mesh(handleGeo, handleMat);
-  handleFL.position.set(-0.925, 0.65, 0.35);
+  handleFL.position.set(-0.89, 0.65, 0.28);
+  // Left Rear Door Handle
   const handleRL = new THREE.Mesh(handleGeo, handleMat);
-  handleRL.position.set(-0.925, 0.65, -0.65);
+  handleRL.position.set(-0.89, 0.65, -0.68);
+  // Right Front Door Handle
   const handleFR = new THREE.Mesh(handleGeo, handleMat);
-  handleFR.position.set(0.925, 0.65, 0.35);
+  handleFR.position.set(0.89, 0.65, 0.28);
+  // Right Rear Door Handle
   const handleRR = new THREE.Mesh(handleGeo, handleMat);
-  handleRR.position.set(0.925, 0.65, -0.65);
+  handleRR.position.set(0.89, 0.65, -0.68);
   car.add(handleFL, handleRL, handleFR, handleRR);
 
-  // Side mirrors
-  const mirrorGeo = new THREE.BoxGeometry(0.16, 0.1, 0.08);
-  const mirrorL = new THREE.Mesh(mirrorGeo, bodyPaintMat);
-  mirrorL.position.set(-0.92, 0.88, 0.72);
-  const mirrorR = new THREE.Mesh(mirrorGeo, bodyPaintMat);
-  mirrorR.position.set(0.92, 0.88, 0.72);
+  // Door vertical shutlines (cut seams)
+  const lineMat = new THREE.MeshBasicMaterial({ color: 0x0f366b });
+  // Front door cut
+  const cutFL = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.46, 0.015), lineMat);
+  cutFL.position.set(-0.885, 0.47, 0.68);
+  // Center B-pillar cut
+  const cutML = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.46, 0.015), lineMat);
+  cutML.position.set(-0.885, 0.47, -0.22);
+  // Rear door cut
+  const cutRL = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.46, 0.015), lineMat);
+  cutRL.position.set(-0.885, 0.47, -1.14);
+
+  const cutFR = cutFL.clone(); cutFR.position.x = 0.885;
+  const cutMR = cutML.clone(); cutMR.position.x = 0.885;
+  const cutRR = cutRL.clone(); cutRR.position.x = 0.885;
+  car.add(cutFL, cutML, cutRL, cutFR, cutMR, cutRR);
+
+  // Aerodynamic side mirrors
+  const mirrorL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.09, 0.07), mirrorMat);
+  mirrorL.position.set(-0.92, 0.82, 0.62);
+  const mirrorR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.09, 0.07), mirrorMat);
+  mirrorR.position.set(0.92, 0.82, 0.62);
   car.add(mirrorL, mirrorR);
 
-  // 6. Lights
-  // Headlights
-  const headlightGeo = new THREE.BoxGeometry(0.32, 0.12, 0.06);
-  const headL = new THREE.Mesh(headlightGeo, headlightMat);
-  headL.position.set(-0.64, 0.55, 2.18);
-  const headR = new THREE.Mesh(headlightGeo, headlightMat);
-  headR.position.set(0.64, 0.55, 2.18);
+  // --- 6. Lights & Plates ---
+  // Headlights (sleek trapezoidal shape)
+  const headGeo = new THREE.BoxGeometry(0.32, 0.11, 0.06);
+  const headL = new THREE.Mesh(headGeo, headlightMat);
+  headL.position.set(-0.62, 0.54, 2.22);
+  const headR = new THREE.Mesh(headGeo, headlightMat);
+  headR.position.set(0.62, 0.54, 2.22);
   car.add(headL, headR);
 
-  // Grille
-  const grille = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.14, 0.04), bodyTrimMat);
-  grille.position.set(0, 0.53, 2.19);
-  car.add(grille);
-
-  // Taillights
-  const taillightGeo = new THREE.BoxGeometry(0.34, 0.12, 0.06);
-  const tailL = new THREE.Mesh(taillightGeo, taillightMat);
-  tailL.position.set(-0.64, 0.58, -2.18);
-  const tailR = new THREE.Mesh(taillightGeo, taillightMat);
-  tailR.position.set(0.64, 0.58, -2.18);
+  // Taillights (horizontal sedan bar)
+  const tailGeo = new THREE.BoxGeometry(0.42, 0.1, 0.06);
+  const tailL = new THREE.Mesh(tailGeo, taillightMat);
+  tailL.position.set(-0.58, 0.62, -2.2);
+  const tailR = new THREE.Mesh(tailGeo, taillightMat);
+  tailR.position.set(0.58, 0.62, -2.2);
   car.add(tailL, tailR);
 
   // License plates
-  const plateMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 });
-  const plateGeo = new THREE.BoxGeometry(0.36, 0.12, 0.02);
+  const plateMat = new THREE.MeshStandardMaterial({ color: 0xfafafa, roughness: 0.5 });
+  const plateGeo = new THREE.BoxGeometry(0.38, 0.12, 0.02);
   const plateF = new THREE.Mesh(plateGeo, plateMat);
-  plateF.position.set(0, 0.35, 2.25);
+  plateF.position.set(0, 0.36, 2.29);
   const plateR = new THREE.Mesh(plateGeo, plateMat);
-  plateR.position.set(0, 0.42, -2.25);
+  plateR.position.set(0, 0.44, -2.3);
   car.add(plateF, plateR);
 
-  // 7. Wheels & Rims
+  // Exhaust pipe
+  const exhaust = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.15, 12), chromeMat);
+  exhaust.rotation.x = Math.PI / 2;
+  exhaust.position.set(0.62, 0.22, -2.22);
+  car.add(exhaust);
+
+  // --- 7. Sedan Wheels (Lower profile sports sedan wheels) ---
   const wheelPositions = [
-    [-0.92, 0.32, 1.32],
-    [0.92, 0.32, 1.32],
-    [-0.92, 0.32, -1.35],
-    [0.92, 0.32, -1.35]
+    [-0.88, 0.28, 1.34],
+    [0.88, 0.28, 1.34],
+    [-0.88, 0.28, -1.36],
+    [0.88, 0.28, -1.36]
   ];
 
-  const tireGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.22, 20);
-  const rimGeo = new THREE.CylinderGeometry(0.19, 0.19, 0.23, 14);
+  const tireGeo = new THREE.CylinderGeometry(0.28, 0.28, 0.2, 22);
+  const rimGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.21, 16);
+  const spokeGeo = new THREE.BoxGeometry(0.34, 0.04, 0.22);
 
   wheelPositions.forEach(([x, y, z]) => {
     const wheelGroup = new THREE.Group();
     wheelGroup.position.set(x, y, z);
 
+    // Tire
     const tire = new THREE.Mesh(tireGeo, tireMat);
     tire.rotation.z = Math.PI / 2;
     tire.castShadow = true;
     wheelGroup.add(tire);
 
+    // Rim
     const rim = new THREE.Mesh(rimGeo, rimMat);
     rim.rotation.z = Math.PI / 2;
     wheelGroup.add(rim);
 
-    // Hubcap center nut
-    const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.24, 8), bodyTrimMat);
-    hub.rotation.z = Math.PI / 2;
-    wheelGroup.add(hub);
+    // 5-Spoke stylized detail
+    const spoke1 = new THREE.Mesh(spokeGeo, chromeMat);
+    spoke1.rotation.y = Math.PI / 2;
+    const spoke2 = spoke1.clone();
+    spoke2.rotation.x = Math.PI / 3;
+    wheelGroup.add(spoke1, spoke2);
 
     car.add(wheelGroup);
   });

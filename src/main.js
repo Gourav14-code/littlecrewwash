@@ -8,8 +8,8 @@ import { createPressureWasher } from './entities/PressureWasher.js';
 // --- Scene & Environment Setup ---
 const container = document.getElementById('app');
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1a222d);
-scene.fog = new THREE.Fog(0x1a222d, 16, 38);
+scene.background = new THREE.Color(0x131a24);
+scene.fog = new THREE.Fog(0x131a24, 18, 42);
 
 // --- Camera Setup ---
 const camera = new THREE.PerspectiveCamera(
@@ -19,7 +19,7 @@ const camera = new THREE.PerspectiveCamera(
   100
 );
 
-// --- Renderer Setup (Integrated GPU Optimized) ---
+// --- Renderer Setup (Integrated GPU Friendly) ---
 const renderer = new THREE.WebGLRenderer({
   powerPreference: 'default',
   antialias: true
@@ -32,156 +32,155 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
 container.appendChild(renderer.domElement);
 
-// --- Orbit Controls (Used for free inspection mode) ---
+// --- Free Orbit Controls (Used for free inspection mode) ---
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.maxPolarAngle = Math.PI / 2 - 0.04;
 controls.minDistance = 1.2;
-controls.maxDistance = 22;
+controls.maxDistance = 24;
 
-// --- Lighting System (Warm & Stylized without heavy compute) ---
-const ambientLight = new THREE.AmbientLight(0xfff5ea, 0.75);
+// --- Lighting System (Warm Wash Bay Lighting) ---
+const ambientLight = new THREE.AmbientLight(0xfff8ee, 0.72);
 scene.add(ambientLight);
 
-// Key Directional Bay Light
-const sunLight = new THREE.DirectionalLight(0xfffaf0, 1.2);
-sunLight.position.set(5, 7.5, 4);
+// Key Directional Bay Sun Light
+const sunLight = new THREE.DirectionalLight(0xfffdf5, 1.25);
+sunLight.position.set(5.5, 7.5, 4.2);
 sunLight.castShadow = true;
 sunLight.shadow.mapSize.width = 1024;
 sunLight.shadow.mapSize.height = 1024;
 sunLight.shadow.camera.near = 0.5;
 sunLight.shadow.camera.far = 25;
-sunLight.shadow.camera.left = -7;
-sunLight.shadow.camera.right = 7;
-sunLight.shadow.camera.top = 7;
-sunLight.shadow.camera.bottom = -7;
-sunLight.shadow.bias = -0.0005;
+sunLight.shadow.camera.left = -7.5;
+sunLight.shadow.camera.right = 7.5;
+sunLight.shadow.camera.top = 7.5;
+sunLight.shadow.camera.bottom = -7.5;
+sunLight.shadow.bias = -0.0004;
 scene.add(sunLight);
 
-// Cool Skylight Fill from opposite bay corner
-const fillLight = new THREE.DirectionalLight(0x7090b0, 0.45);
-fillLight.position.set(-6, 4, -4);
+// Cool Skylight Fill Light from opposite bay side
+const fillLight = new THREE.DirectionalLight(0x759ac0, 0.45);
+fillLight.position.set(-6, 4.5, -4.5);
 scene.add(fillLight);
 
-// Subtle warm point lights under overhead fluorescent fixtures
-const overheadLight1 = new THREE.PointLight(0xfff5e6, 0.8, 8);
-overheadLight1.position.set(0, 4.2, 0);
-const overheadLight2 = new THREE.PointLight(0xfff5e6, 0.6, 8);
-overheadLight2.position.set(0, 4.2, -3);
-scene.add(overheadLight1, overheadLight2);
+// Overhead wash bay point lights directly beneath ceiling fixtures
+const bayLight1 = new THREE.PointLight(0xfffaed, 0.85, 9);
+bayLight1.position.set(0, 4.3, 1.2);
+const bayLight2 = new THREE.PointLight(0xfffaed, 0.75, 9);
+bayLight2.position.set(0, 4.3, -1.8);
+scene.add(bayLight1, bayLight2);
 
-// --- Add Entities to Scene ---
-// 1. Garage Architecture & Workshop Props
+// --- Entities Instantiation ---
+// 1. Clean Auto Wash Garage
 const garage = createGarage();
 scene.add(garage);
 
-// 2. Stylized Sedan
+// 2. Stylized Four-Door Sedan (Placed cleanly in bay center)
 const car = createCar();
 car.position.set(0, 0, 0);
 scene.add(car);
 
-// 3. Wash Crew Character
+// 3. Wash Crew Character (Well separated from car, standing by bay perimeter)
 const character = createCharacter();
-const charInitialPos = new THREE.Vector3(-2.2, 0, 0.9);
-character.position.copy(charInitialPos);
-character.rotation.y = Math.PI / 3.2; // Angled toward car side door
+const charPos = new THREE.Vector3(-2.4, 0, 0.7);
+character.position.copy(charPos);
+character.rotation.y = Math.PI / 3.4; // Facing car driver-side door
 scene.add(character);
 
-// 4. Mobile Pressure Washer Unit & Wand
+// 4. Mobile Pressure Washer Unit & Handheld Spray Gun
 const pressureWasher = createPressureWasher();
-const machinePos = new THREE.Vector3(-3.8, 0, -1.8);
-pressureWasher.userData.cartGroup.position.copy(machinePos);
-pressureWasher.userData.cartGroup.rotation.y = Math.PI / 5;
+const cartPos = new THREE.Vector3(-3.85, 0, -1.6);
+pressureWasher.userData.cart.position.copy(cartPos);
+pressureWasher.userData.cart.rotation.y = Math.PI / 4.5;
 
-// Attach wand in front of character's right hand in 3rd person
-const wand = pressureWasher.userData.wand;
-const wandWorldPos = new THREE.Vector3(-1.75, 1.05, 1.15);
-wand.position.copy(wandWorldPos);
-wand.rotation.set(0.1, Math.PI / 3.5, 0.05);
-
+// Handheld spray gun positioned in character's right hand
+const gun = pressureWasher.userData.gun;
+const gunWorldPos = new THREE.Vector3(-1.85, 1.05, 1.05);
+gun.position.copy(gunWorldPos);
+gun.rotation.set(0.08, Math.PI / 3.6, 0.04);
 scene.add(pressureWasher);
 
-// Create the connecting hose
-pressureWasher.userData.updateHose(machinePos, wandWorldPos);
+// Connect the flexible high-pressure black hose
+pressureWasher.userData.updateHose(cartPos, gunWorldPos);
 
-// --- First-Person Foreground Wand (Viewmodel) ---
-// When in first-person mode, this wand sits in the bottom-right of the viewport
-const fpWandGroup = new THREE.Group();
-const fpWand = wand.clone(true);
-fpWand.position.set(0.28, -0.26, -0.58); // Bottom-right corner of screen
-fpWand.rotation.set(0.05, -0.12, 0.02);
-fpWandGroup.add(fpWand);
-camera.add(fpWandGroup);
+// --- First-Person Viewmodel Gun ---
+// In first-person view, this gun model sits in the lower-right foreground of the screen
+const fpGunGroup = new THREE.Group();
+const fpGun = gun.clone(true);
+fpGun.position.set(0.26, -0.25, -0.56);
+fpGun.rotation.set(0.04, -0.1, 0.02);
+fpGunGroup.add(fpGun);
+camera.add(fpGunGroup);
 scene.add(camera);
-fpWandGroup.visible = false; // Hidden in 3rd person
+fpGunGroup.visible = false;
 
-// --- Camera View Controller ---
-// Modes: 'third' (Over the shoulder), 'first' (Eyes view), 'inspect' (Free orbit)
+// --- Camera Controller & Modes ---
+// Mode options: 'third', 'first', 'inspect'
 let currentCameraMode = 'third';
 
-// Camera position presets
-const thirdPersonCamPos = new THREE.Vector3(-3.45, 2.05, 2.25);
-const thirdPersonLookTarget = new THREE.Vector3(-0.4, 0.95, 0.55);
+const thirdPersonCamPos = new THREE.Vector3(-3.65, 2.1, 2.2);
+const thirdPersonLookTarget = new THREE.Vector3(-0.35, 0.95, 0.45);
 
-const firstPersonCamPos = new THREE.Vector3(-2.2, 1.62, 0.9);
-const firstPersonLookTarget = new THREE.Vector3(0.0, 1.05, 0.5);
+const firstPersonCamPos = new THREE.Vector3(-2.4, 1.62, 0.7);
+const firstPersonLookTarget = new THREE.Vector3(0.0, 1.05, 0.45);
 
-const inspectCamPos = new THREE.Vector3(4.8, 3.5, 5.2);
-const inspectLookTarget = new THREE.Vector3(0, 1.0, 0);
+const inspectCamPos = new THREE.Vector3(4.9, 3.4, 5.1);
+const inspectLookTarget = new THREE.Vector3(0, 0.9, 0);
 
+// UI DOM Elements
 const currentViewText = document.getElementById('current-view-text');
-const toggleBtn = document.getElementById('toggle-cam-btn');
+const toggleCamBtn = document.getElementById('toggle-cam-btn');
 const orbitInspectBtn = document.getElementById('orbit-inspect-btn');
 
 function applyCameraMode(mode) {
   currentCameraMode = mode;
 
   if (mode === 'third') {
-    // Over-the-shoulder player view
     camera.position.copy(thirdPersonCamPos);
     camera.lookAt(thirdPersonLookTarget);
-    controls.enabled = false; // Keep camera fixed in true over-the-shoulder perspective
+    controls.enabled = false;
 
     character.visible = true;
-    wand.visible = true;
-    fpWandGroup.visible = false;
+    gun.visible = true;
+    fpGunGroup.visible = false;
 
     currentViewText.innerText = 'Third-Person (Over-the-Shoulder)';
     currentViewText.style.color = '#38bdf8';
-    toggleBtn.innerText = 'Switch to: First-Person View';
+    toggleCamBtn.innerText = 'Switch to: First-Person View';
+    orbitInspectBtn.innerText = 'Free Inspect Camera (Orbit)';
   } else if (mode === 'first') {
-    // Eye level view from character
     camera.position.copy(firstPersonCamPos);
     camera.lookAt(firstPersonLookTarget);
     controls.enabled = false;
 
-    // In first person, hide the external character model to prevent internal camera clipping
+    // Hide external third-person mesh to avoid camera clipping
     character.visible = false;
-    wand.visible = false;
-    fpWandGroup.visible = true; // Show first-person tool in hand
+    gun.visible = false;
+    fpGunGroup.visible = true;
 
     currentViewText.innerText = 'First-Person (Eyeline View)';
     currentViewText.style.color = '#4ade80';
-    toggleBtn.innerText = 'Switch to: Third-Person View';
+    toggleCamBtn.innerText = 'Switch to: Third-Person View';
+    orbitInspectBtn.innerText = 'Free Inspect Camera (Orbit)';
   } else if (mode === 'inspect') {
-    // Free orbit camera for inspecting the full scene
     camera.position.copy(inspectCamPos);
     controls.target.copy(inspectLookTarget);
     controls.enabled = true;
 
     character.visible = true;
-    wand.visible = true;
-    fpWandGroup.visible = false;
+    gun.visible = true;
+    fpGunGroup.visible = false;
 
     currentViewText.innerText = 'Free Inspect (Orbit Camera)';
     currentViewText.style.color = '#f59e0b';
-    toggleBtn.innerText = 'Switch to: First-Person View';
+    toggleCamBtn.innerText = 'Switch to: First-Person View';
+    orbitInspectBtn.innerText = 'Reset to: Third-Person View';
   }
 }
 
-// Button Events
-toggleBtn.addEventListener('click', () => {
+// Button Listeners
+toggleCamBtn.addEventListener('click', () => {
   if (currentCameraMode === 'third') {
     applyCameraMode('first');
   } else {
@@ -197,10 +196,10 @@ orbitInspectBtn.addEventListener('click', () => {
   }
 });
 
-// Initialize in true Third-Person mode
+// Default to true Third-Person Player View
 applyCameraMode('third');
 
-// --- Responsive Resizing ---
+// --- Responsive Window Resizing ---
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -208,21 +207,26 @@ window.addEventListener('resize', () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 });
 
-// --- Gentle Subtle Animation Loop ---
-let clock = new THREE.Clock();
+// --- Animation Loop ---
+const clock = new THREE.Clock();
 
 function animate() {
   requestAnimationFrame(animate);
 
   const elapsedTime = clock.getElapsedTime();
 
-  // Subtle breathing / idle sway for first-person wand tool
-  if (currentCameraMode === 'first' && fpWandGroup.visible) {
-    fpWand.position.y = -0.26 + Math.sin(elapsedTime * 2.2) * 0.006;
-    fpWand.position.x = 0.28 + Math.cos(elapsedTime * 1.5) * 0.004;
+  // 1. Procedural character breathing & wand stabilization
+  if (character.visible && character.userData.updateAnimation) {
+    character.userData.updateAnimation(elapsedTime, 'idle_wash');
   }
 
-  // If in inspect mode, update orbit controls damping
+  // 2. First-person viewmodel gentle idle breathing
+  if (currentCameraMode === 'first' && fpGunGroup.visible) {
+    fpGun.position.y = -0.25 + Math.sin(elapsedTime * 2.2) * 0.005;
+    fpGun.position.x = 0.26 + Math.cos(elapsedTime * 1.6) * 0.003;
+  }
+
+  // 3. Orbit controls damping in inspect mode
   if (controls.enabled) {
     controls.update();
   }

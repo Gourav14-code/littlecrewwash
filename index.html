@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Little Wash Crew - Stylized Prototype Preview</title>
+    <title>Little Wash Crew - Level 1 Garage Preview</title>
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
@@ -12,13 +12,13 @@
       <div class="hud-panel">
         <div class="hud-header">
           <h1>Little Wash Crew</h1>
-          <span class="badge">Stylized Prototype</span>
+          <span class="badge">Level 1: The Sedan Bay</span>
         </div>
-        <p class="desc">Auto Wash Simulation Prototype</p>
+        <p class="subtitle">Stylized Car Wash Simulation</p>
 
-        <div class="status-row">
-          <span class="label">Current Camera:</span>
-          <span id="current-view-text" class="value">Third-Person Player View</span>
+        <div class="camera-mode-card">
+          <span class="mode-label">CURRENT CAMERA MODE:</span>
+          <span id="current-view-text" class="mode-value">Third-Person (Over-the-Shoulder)</span>
         </div>
 
         <div class="controls-box">
@@ -26,10 +26,19 @@
           <button id="orbit-inspect-btn" class="secondary-btn">Free Inspect Camera (Orbit)</button>
         </div>
 
-        <div class="info-footer">
-          <p>• <b>Third-Person:</b> Over-the-shoulder view of crew & sedan</p>
-          <p>• <b>First-Person:</b> Eyes perspective with spray wand in hand</p>
-          <p>• <b>Free Inspect:</b> Drag mouse to orbit around garage</p>
+        <div class="guide-box">
+          <div class="guide-item">
+            <span class="key">Third-Person:</span>
+            <span>Frames crew member & spray gun behind car</span>
+          </div>
+          <div class="guide-item">
+            <span class="key">First-Person:</span>
+            <span>Eye-level view with handheld spray lance</span>
+          </div>
+          <div class="guide-item">
+            <span class="key">Free Inspect:</span>
+            <span>Left-click & drag mouse to rotate around bay</span>
+          </div>
         </div>
       </div>
     </div>

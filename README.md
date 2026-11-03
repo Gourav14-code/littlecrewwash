@@ -25,3 +25,4 @@ npm run build
 - `src/entities/GarageEnvironment.js`: Workshop wash bay with drainage trench, hazard markings, ceiling girders, and props.
 - `src/entities/PressureWasher.js`: Mobile pressure washer unit with connected high-pressure hose and trigger wand.
 - `src/main.js`: Three.js scene manager, lighting, rendering pipeline, and dual-mode (third-person & first-person) camera controller.
+

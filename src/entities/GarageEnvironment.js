@@ -1,263 +1,222 @@
 import * as THREE from 'three';
 
 /**
- * Creates a stylized, recognizable auto wash bay and workshop garage environment.
- * All built with clean, low-draw-call procedural meshes.
+ * Creates a clean, stylized auto wash garage environment with rich architectural depth:
+ * - Polished epoxy concrete floor with specular sheen.
+ * - Precision wash bay perimeter safety lines (high-vis yellow).
+ * - Full-length sunken center drainage trench with dark cast-iron slotted grates.
+ * - Clean architectural wall panels with two-tone industrial paint and horizontal seams.
+ * - Wall signage ("BAY 01 - AUTO DETAILING").
+ * - Overhead structural ceiling beams with dual LED wash batten lights.
+ * - Removed all unnecessary random clutter props to maintain a professional, focused scene.
  */
 export function createGarage() {
   const garage = new THREE.Group();
-  garage.name = 'GarageEnvironment';
+  garage.name = 'AutoWashGarage';
 
   // --- Materials ---
-  const floorConcreteMat = new THREE.MeshStandardMaterial({
-    color: 0x4a5568, // Clean industrial grey concrete floor
-    roughness: 0.5,
-    metalness: 0.1
+  const mainFloorMat = new THREE.MeshStandardMaterial({
+    color: 0x3e4756, // Polished dark industrial epoxy floor
+    roughness: 0.38,
+    metalness: 0.18
   });
 
-  const bayTileMat = new THREE.MeshStandardMaterial({
-    color: 0x2d3748, // Dark non-slip wash zone tile
-    roughness: 0.4,
-    metalness: 0.2
+  const washBayPadMat = new THREE.MeshStandardMaterial({
+    color: 0x242d38, // Dark non-slip wash zone concrete
+    roughness: 0.32,
+    metalness: 0.22
   });
 
-  const hazardYellowMat = new THREE.MeshStandardMaterial({
-    color: 0xf6ad55, // Safety yellow bay boundary lines
-    roughness: 0.4
+  const safetyYellowMat = new THREE.MeshStandardMaterial({
+    color: 0xf59e0b, // Vibrant safety yellow marking enamel
+    roughness: 0.3
   });
 
-  const drainGrateMat = new THREE.MeshStandardMaterial({
-    color: 0x1a202c,
+  const drainChannelMat = new THREE.MeshStandardMaterial({
+    color: 0x11161d,
     roughness: 0.9,
-    metalness: 0.4
-  });
-
-  const lowerWallMat = new THREE.MeshStandardMaterial({
-    color: 0x2b4259, // Navy blue industrial lower wainscoting
-    roughness: 0.7
-  });
-
-  const upperWallMat = new THREE.MeshStandardMaterial({
-    color: 0xe2e8f0, // Light off-white workshop upper wall
-    roughness: 0.9
-  });
-
-  const trimStripeMat = new THREE.MeshStandardMaterial({
-    color: 0xed8936, // Orange divider stripe
-    roughness: 0.5
-  });
-
-  const steelGirderMat = new THREE.MeshStandardMaterial({
-    color: 0x1f2937,
-    roughness: 0.6,
     metalness: 0.3
   });
 
-  const lightHousingMat = new THREE.MeshStandardMaterial({
-    color: 0x334155,
-    roughness: 0.8
+  const lowerWallMat = new THREE.MeshStandardMaterial({
+    color: 0x1e293b, // Deep navy blue lower industrial wainscoting
+    roughness: 0.65
   });
 
-  const lightGlowMat = new THREE.MeshStandardMaterial({
+  const upperWallMat = new THREE.MeshStandardMaterial({
+    color: 0xdde3ea, // Clean off-white workshop upper paneling
+    roughness: 0.85
+  });
+
+  const orangeStripeMat = new THREE.MeshStandardMaterial({
+    color: 0xe65100, // Architectural separator stripe
+    roughness: 0.4
+  });
+
+  const girderMat = new THREE.MeshStandardMaterial({
+    color: 0x1a212d,
+    roughness: 0.7,
+    metalness: 0.4
+  });
+
+  const fixtureMat = new THREE.MeshStandardMaterial({
+    color: 0x334155,
+    roughness: 0.6
+  });
+
+  const glowTubeMat = new THREE.MeshStandardMaterial({
     color: 0xffffff,
-    emissive: 0xfffaed,
-    emissiveIntensity: 1.2,
+    emissive: 0xf8fafc,
+    emissiveIntensity: 1.4,
     roughness: 0.1
   });
 
-  // --- 1. Floor & Wash Bay Boundaries ---
-  // Main floor
-  const mainFloor = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), floorConcreteMat);
-  mainFloor.rotation.x = -Math.PI / 2;
-  mainFloor.receiveShadow = true;
-  garage.add(mainFloor);
+  // --- 1. Floor & Wash Bay Markings ---
+  // Large workshop foundation floor
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), mainFloorMat);
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  garage.add(floor);
 
-  // Dedicated Wash Bay Platform (Non-slip inner zone)
-  const washZone = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 6.2), bayTileMat);
-  washZone.rotation.x = -Math.PI / 2;
-  washZone.position.set(0, 0.005, 0);
-  washZone.receiveShadow = true;
-  garage.add(washZone);
-
-  // Safety Yellow Bay Perimeter Lines (Clean stylized border, no raw grid)
-  const lineThickness = 0.12;
-  const bayW = 3.8;
+  // Dedicated Wash Bay Center Pad
+  const bayW = 3.6;
   const bayL = 6.4;
+  const washPad = new THREE.Mesh(new THREE.PlaneGeometry(bayW, bayL), washBayPadMat);
+  washPad.rotation.x = -Math.PI / 2;
+  washPad.position.set(0, 0.004, 0);
+  washPad.receiveShadow = true;
+  garage.add(washPad);
 
-  // Left stripe
-  const stripeL = new THREE.Mesh(new THREE.PlaneGeometry(lineThickness, bayL), hazardYellowMat);
-  stripeL.rotation.x = -Math.PI / 2;
-  stripeL.position.set(-bayW / 2, 0.008, 0);
-  garage.add(stripeL);
+  // High-Vis Safety Perimeter Lines (Crisp boundary edges)
+  const lineW = 0.14;
+  // Left border stripe
+  const lineL = new THREE.Mesh(new THREE.PlaneGeometry(lineW, bayL), safetyYellowMat);
+  lineL.rotation.x = -Math.PI / 2;
+  lineL.position.set(-bayW / 2, 0.007, 0);
+  garage.add(lineL);
 
-  // Right stripe
-  const stripeR = stripeL.clone();
-  stripeR.position.x = bayW / 2;
-  garage.add(stripeR);
+  // Right border stripe
+  const lineR = lineL.clone();
+  lineR.position.x = bayW / 2;
+  garage.add(lineR);
 
-  // Front stripe
-  const stripeF = new THREE.Mesh(new THREE.PlaneGeometry(bayW + lineThickness, lineThickness), hazardYellowMat);
-  stripeF.rotation.x = -Math.PI / 2;
-  stripeF.position.set(0, 0.008, bayL / 2);
-  garage.add(stripeF);
+  // Front border stripe
+  const lineF = new THREE.Mesh(new THREE.PlaneGeometry(bayW + lineW, lineW), safetyYellowMat);
+  lineF.rotation.x = -Math.PI / 2;
+  lineF.position.set(0, 0.007, bayL / 2);
+  garage.add(lineF);
 
-  // Back stripe
-  const stripeB = stripeF.clone();
-  stripeB.position.z = -bayL / 2;
-  garage.add(stripeB);
+  // Rear border stripe
+  const lineB = lineF.clone();
+  lineB.position.z = -bayL / 2;
+  garage.add(lineB);
 
-  // Center Slotted Drainage Trench (Under car center)
-  const drainTrench = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 4.6), drainGrateMat);
-  drainTrench.rotation.x = -Math.PI / 2;
-  drainTrench.position.set(0, 0.009, 0);
-  drainTrench.receiveShadow = true;
-  garage.add(drainTrench);
+  // Corner hazard notch accents (automotive bay styling)
+  const notchGeo = new THREE.PlaneGeometry(0.3, 0.3);
+  const notchBL = new THREE.Mesh(notchGeo, safetyYellowMat);
+  notchBL.rotation.x = -Math.PI / 2;
+  notchBL.position.set(-bayW / 2 - 0.25, 0.007, -bayL / 2 - 0.25);
+  const notchBR = notchBL.clone(); notchBR.position.x = bayW / 2 + 0.25;
+  const notchFL = notchBL.clone(); notchFL.position.z = bayL / 2 + 0.25;
+  const notchFR = notchBL.clone(); notchFR.position.set(bayW / 2 + 0.25, 0.007, bayL / 2 + 0.25);
+  garage.add(notchBL, notchBR, notchFL, notchFR);
 
-  // Slotted grate bars
-  const grateBarMat = new THREE.MeshStandardMaterial({ color: 0x374151, metalness: 0.5 });
-  for (let z = -2.1; z <= 2.1; z += 0.35) {
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(1.16, 0.015, 0.06), grateBarMat);
-    bar.position.set(0, 0.012, z);
-    garage.add(bar);
+  // --- 2. Central Water Drainage Trench ---
+  // Deep drainage trench channel directly below car center
+  const trenchW = 0.95;
+  const trenchL = 5.2;
+  const trench = new THREE.Mesh(new THREE.PlaneGeometry(trenchW, trenchL), drainChannelMat);
+  trench.rotation.x = -Math.PI / 2;
+  trench.position.set(0, 0.008, 0);
+  trench.receiveShadow = true;
+  garage.add(trench);
+
+  // Cast iron slotted grate bars across trench
+  const barMat = new THREE.MeshStandardMaterial({ color: 0x27272a, metalness: 0.6, roughness: 0.6 });
+  for (let z = -trenchL / 2 + 0.2; z <= trenchL / 2 - 0.2; z += 0.3) {
+    const grateBar = new THREE.Mesh(new THREE.BoxGeometry(trenchW - 0.04, 0.016, 0.06), barMat);
+    grateBar.position.set(0, 0.012, z);
+    garage.add(grateBar);
   }
 
-  // --- 2. Walls (Back and Left) ---
-  const wallH = 4.8;
-  const wainscotH = 1.6;
+  // --- 3. Clean Workshop Architectural Walls ---
+  const wallHeight = 4.8;
+  const wainscotHeight = 1.6;
 
-  // Back Wall - Lower wainscot
-  const backLower = new THREE.Mesh(new THREE.BoxGeometry(16, wainscotH, 0.3), lowerWallMat);
-  backLower.position.set(0, wainscotH / 2, -8);
+  // Back Wall Assembly
+  const backLower = new THREE.Mesh(new THREE.BoxGeometry(16, wainscotHeight, 0.25), lowerWallMat);
+  backLower.position.set(0, wainscotHeight / 2, -8);
   backLower.receiveShadow = true;
   garage.add(backLower);
 
-  // Back Wall - Accent orange stripe
-  const backStripe = new THREE.Mesh(new THREE.BoxGeometry(16, 0.1, 0.32), trimStripeMat);
-  backStripe.position.set(0, wainscotH + 0.05, -8);
+  const backStripe = new THREE.Mesh(new THREE.BoxGeometry(16, 0.08, 0.27), orangeStripeMat);
+  backStripe.position.set(0, wainscotHeight + 0.04, -8);
   garage.add(backStripe);
 
-  // Back Wall - Upper section
-  const backUpper = new THREE.Mesh(new THREE.BoxGeometry(16, wallH - wainscotH - 0.1, 0.3), upperWallMat);
-  backUpper.position.set(0, wainscotH + 0.1 + (wallH - wainscotH - 0.1) / 2, -8);
+  const backUpper = new THREE.Mesh(new THREE.BoxGeometry(16, wallHeight - wainscotHeight - 0.08, 0.25), upperWallMat);
+  backUpper.position.set(0, wainscotHeight + 0.08 + (wallHeight - wainscotHeight - 0.08) / 2, -8);
   backUpper.receiveShadow = true;
   garage.add(backUpper);
 
-  // Left Wall - Lower wainscot
-  const leftLower = new THREE.Mesh(new THREE.BoxGeometry(0.3, wainscotH, 16), lowerWallMat);
-  leftLower.position.set(-8, wainscotH / 2, 0);
+  // Architectural vertical panel seams on back wall
+  const seamMat = new THREE.MeshStandardMaterial({ color: 0xc8d1dc, roughness: 0.9 });
+  for (let sx = -6; sx <= 6; sx += 4) {
+    const seam = new THREE.Mesh(new THREE.BoxGeometry(0.04, wallHeight - wainscotHeight - 0.08, 0.27), seamMat);
+    seam.position.set(sx, wainscotHeight + 0.08 + (wallHeight - wainscotHeight - 0.08) / 2, -8);
+    garage.add(seam);
+  }
+
+  // Left Wall Assembly
+  const leftLower = new THREE.Mesh(new THREE.BoxGeometry(0.25, wainscotHeight, 16), lowerWallMat);
+  leftLower.position.set(-8, wainscotHeight / 2, 0);
   leftLower.receiveShadow = true;
   garage.add(leftLower);
 
-  // Left Wall - Accent stripe
-  const leftStripe = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.1, 16), trimStripeMat);
-  leftStripe.position.set(-8, wainscotH + 0.05, 0);
+  const leftStripe = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.08, 16), orangeStripeMat);
+  leftStripe.position.set(-8, wainscotHeight + 0.04, 0);
   garage.add(leftStripe);
 
-  // Left Wall - Upper section
-  const leftUpper = new THREE.Mesh(new THREE.BoxGeometry(0.3, wallH - wainscotH - 0.1, 16), upperWallMat);
-  leftUpper.position.set(-8, wainscotH + 0.1 + (wallH - wainscotH - 0.1) / 2, 0);
+  const leftUpper = new THREE.Mesh(new THREE.BoxGeometry(0.25, wallHeight - wainscotHeight - 0.08, 16), upperWallMat);
+  leftUpper.position.set(-8, wainscotHeight + 0.08 + (wallHeight - wainscotHeight - 0.08) / 2, 0);
   leftUpper.receiveShadow = true;
   garage.add(leftUpper);
 
-  // --- 3. Roof Steel Trusses & Girders ---
-  for (let z = -6; z <= 6; z += 4) {
-    // Cross beam
-    const girder = new THREE.Mesh(new THREE.BoxGeometry(16, 0.22, 0.22), steelGirderMat);
-    girder.position.set(0, wallH - 0.15, z);
+  // Architectural Signboard on Back Wall ("BAY 01 - AUTO WASH")
+  const signBacking = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.7, 0.05), lowerWallMat);
+  signBacking.position.set(0, 3.2, -7.85);
+  garage.add(signBacking);
+
+  const signBorder = new THREE.Mesh(new THREE.BoxGeometry(3.7, 0.78, 0.03), orangeStripeMat);
+  signBorder.position.set(0, 3.2, -7.86);
+  garage.add(signBorder);
+
+  // Left wall high-pressure water spigot & utility box
+  const utilityBox = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.45, 0.35), girderMat);
+  utilityBox.position.set(-7.88, 1.4, -2.5);
+  garage.add(utilityBox);
+
+  // --- 4. Structural Roof Girders & Overhead Lighting ---
+  for (let gz = -5.5; gz <= 5.5; gz += 3.8) {
+    const girder = new THREE.Mesh(new THREE.BoxGeometry(16, 0.22, 0.2), girderMat);
+    girder.position.set(0, wallHeight - 0.12, gz);
     garage.add(girder);
-
-    // Diagonal support brackets
-    const bracketL = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.08, 0.08), steelGirderMat);
-    bracketL.rotation.z = Math.PI / 4;
-    bracketL.position.set(-7.5, wallH - 0.5, z);
-    garage.add(bracketL);
   }
 
-  // --- 4. Overhead Wash Lights (Fluorescent ceiling bars) ---
-  const lightZPositions = [-3.0, 0, 3.0];
-  lightZPositions.forEach((z) => {
-    const fixtureGroup = new THREE.Group();
-    fixtureGroup.position.set(0, wallH - 0.35, z);
+  // Dual Longitudinal LED Wash Luminaires (Directly overhead parallel to car)
+  const lampPositions = [-1.4, 1.4];
+  lampPositions.forEach((lx) => {
+    const fixture = new THREE.Group();
+    fixture.position.set(lx, wallHeight - 0.3, 0);
 
-    // Housing box
-    const housing = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.12, 0.35), lightHousingMat);
-    fixtureGroup.add(housing);
+    const housing = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.1, 5.6), fixtureMat);
+    fixture.add(housing);
 
-    // Diffuser glow panel
-    const glowTube = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.05, 0.25), lightGlowMat);
-    glowTube.position.y = -0.06;
-    fixtureGroup.add(glowTube);
+    const diffuser = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.04, 5.4), glowTubeMat);
+    diffuser.position.y = -0.05;
+    fixture.add(diffuser);
 
-    garage.add(fixtureGroup);
+    garage.add(fixture);
   });
-
-  // --- 5. Workshop Props (Simple, recognizable procedural objects) ---
-  // A. Red Mechanics Rolling Tool Cabinet
-  const toolCabinet = new THREE.Group();
-  const cabBodyMat = new THREE.MeshStandardMaterial({ color: 0xd32f2f, roughness: 0.4 });
-  const cabTrimMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.6 });
-
-  const cabBody = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.1, 0.55), cabBodyMat);
-  cabBody.position.set(-6.5, 0.65, -6.8);
-  cabBody.castShadow = true;
-  toolCabinet.add(cabBody);
-
-  // Drawer lines
-  for (let dy = 0.3; dy <= 0.9; dy += 0.2) {
-    const drawerLine = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.02, 0.02), cabTrimMat);
-    drawerLine.position.set(-6.5, dy, -6.52);
-    toolCabinet.add(drawerLine);
-  }
-  // Side handle
-  const cabHandle = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.25, 0.08), cabTrimMat);
-  cabHandle.position.set(-6.02, 0.85, -6.8);
-  toolCabinet.add(cabHandle);
-
-  garage.add(toolCabinet);
-
-  // B. Stacked Tires in Garage Corner
-  const tireGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.24, 16);
-  const tireMat = new THREE.MeshStandardMaterial({ color: 0x1f2421, roughness: 0.9 });
-
-  const tire1 = new THREE.Mesh(tireGeo, tireMat);
-  tire1.position.set(-6.8, 0.12, -4.5);
-  tire1.castShadow = true;
-  const tire2 = new THREE.Mesh(tireGeo, tireMat);
-  tire2.position.set(-6.8, 0.36, -4.5);
-  tire2.castShadow = true;
-  const tire3 = new THREE.Mesh(tireGeo, tireMat);
-  tire3.position.set(-6.78, 0.6, -4.52);
-  tire3.rotation.y = 0.3;
-  tire3.castShadow = true;
-  garage.add(tire1, tire2, tire3);
-
-  // C. Industrial 55-Gallon Wash Soap Drum / Barrel
-  const barrelMat = new THREE.MeshStandardMaterial({
-    color: 0x1e88e5, // Blue chemical/soap drum
-    roughness: 0.5,
-    metalness: 0.2
-  });
-  const barrelGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.95, 18);
-  const soapBarrel = new THREE.Mesh(barrelGeo, barrelMat);
-  soapBarrel.position.set(-6.8, 0.48, -2.5);
-  soapBarrel.castShadow = true;
-  garage.add(soapBarrel);
-
-  // Barrel rim rings
-  const ringMat = new THREE.MeshStandardMaterial({ color: 0x0d47a1, roughness: 0.6 });
-  const ringGeo = new THREE.CylinderGeometry(0.33, 0.33, 0.03, 18);
-  const ring1 = new THREE.Mesh(ringGeo, ringMat);
-  ring1.position.set(-6.8, 0.72, -2.5);
-  const ring2 = new THREE.Mesh(ringGeo, ringMat);
-  ring2.position.set(-6.8, 0.24, -2.5);
-  garage.add(ring1, ring2);
-
-  // D. Garage Wall Hose Reel Bracket
-  const reelMat = new THREE.MeshStandardMaterial({ color: 0xe53935 });
-  const reelDrum = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.25, 14), reelMat);
-  reelDrum.rotation.z = Math.PI / 2;
-  reelDrum.position.set(-7.72, 2.2, -1.0);
-  garage.add(reelDrum);
 
   return garage;
 }

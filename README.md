@@ -5,6 +5,7 @@ A stylized 3D car wash simulation game built with **Three.js + JavaScript + Vite
 - **Repository:** https://github.com/Gourav14-code/littlecrewwash.git
 - **License:** Open Source / Creative Commons CC0
 - **Budget:** ₹0 (No paid tools, assets, or subscriptions)
+- **Handover Documentation:** See [PROJECT_HANDOFF.md](file:///c:/wm/PROJECT_HANDOFF.md) for full project decisions, technical constraints, and developer instructions.
 
 ## Development Setup
 

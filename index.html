@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Little Wash Crew - Stylized Prototype Preview</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="ui-overlay">
+      <div class="hud-panel">
+        <div class="hud-header">
+          <h1>Little Wash Crew</h1>
+          <span class="badge">Stylized Prototype</span>
+        </div>
+        <p class="desc">Auto Wash Simulation Prototype</p>
+
+        <div class="status-row">
+          <span class="label">Current Camera:</span>
+          <span id="current-view-text" class="value">Third-Person Player View</span>
+        </div>
+
+        <div class="controls-box">
+          <button id="toggle-cam-btn" class="primary-btn">Switch to: First-Person View</button>
+          <button id="orbit-inspect-btn" class="secondary-btn">Free Inspect Camera (Orbit)</button>
+        </div>
+
+        <div class="info-footer">
+          <p>• <b>Third-Person:</b> Over-the-shoulder view of crew & sedan</p>
+          <p>• <b>First-Person:</b> Eyes perspective with spray wand in hand</p>
+          <p>• <b>Free Inspect:</b> Drag mouse to orbit around garage</p>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

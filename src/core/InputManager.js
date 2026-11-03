@@ -34,53 +34,27 @@ export class InputManager {
   _setupListeners() {
     // Keyboard down
     window.addEventListener('keydown', (e) => {
-      switch (e.code) {
-        case 'KeyW':
-        case 'ArrowUp':
-          this.keys.forward = true;
-          break;
-        case 'KeyS':
-        case 'ArrowDown':
-          this.keys.backward = true;
-          break;
-        case 'KeyA':
-        case 'ArrowLeft':
-          this.keys.left = true;
-          break;
-        case 'KeyD':
-        case 'ArrowRight':
-          this.keys.right = true;
-          break;
-        case 'KeyE':
-          this.justPressedE = true;
-          break;
-        case 'KeyV':
-        case 'KeyC':
-          this.justPressedV = true;
-          break;
-      }
+      const code = e.code;
+      const key = e.key ? e.key.toLowerCase() : '';
+
+      if (code === 'KeyW' || key === 'w' || code === 'ArrowUp') this.keys.forward = true;
+      if (code === 'KeyS' || key === 's' || code === 'ArrowDown') this.keys.backward = true;
+      if (code === 'KeyA' || key === 'a' || code === 'ArrowLeft') this.keys.left = true;
+      if (code === 'KeyD' || key === 'd' || code === 'ArrowRight') this.keys.right = true;
+
+      if (code === 'KeyE' || key === 'e') this.justPressedE = true;
+      if (code === 'KeyV' || key === 'v' || code === 'KeyC' || key === 'c') this.justPressedV = true;
     });
 
     // Keyboard up
     window.addEventListener('keyup', (e) => {
-      switch (e.code) {
-        case 'KeyW':
-        case 'ArrowUp':
-          this.keys.forward = false;
-          break;
-        case 'KeyS':
-        case 'ArrowDown':
-          this.keys.backward = false;
-          break;
-        case 'KeyA':
-        case 'ArrowLeft':
-          this.keys.left = false;
-          break;
-        case 'KeyD':
-        case 'ArrowRight':
-          this.keys.right = false;
-          break;
-      }
+      const code = e.code;
+      const key = e.key ? e.key.toLowerCase() : '';
+
+      if (code === 'KeyW' || key === 'w' || code === 'ArrowUp') this.keys.forward = false;
+      if (code === 'KeyS' || key === 's' || code === 'ArrowDown') this.keys.backward = false;
+      if (code === 'KeyA' || key === 'a' || code === 'ArrowLeft') this.keys.left = false;
+      if (code === 'KeyD' || key === 'd' || code === 'ArrowRight') this.keys.right = false;
     });
 
     // Mouse down on canvas

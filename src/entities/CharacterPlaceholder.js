@@ -223,15 +223,48 @@ export function createCharacter() {
   rightKnee.add(rightBoot);
 
   // --- Animation Handles & Procedural Controller ---
-  function updateAnimation(time, mode = 'idle_wash') {
-    if (mode === 'idle_wash') {
+  function updateAnimation(time, isMoving = false, isEquipped = true) {
+    if (isMoving) {
+      const walkCycle = time * 8.0;
+      // Stride leg swing
+      leftHip.rotation.x = Math.sin(walkCycle) * 0.55;
+      rightHip.rotation.x = -Math.sin(walkCycle) * 0.55;
+
+      // Knee bend on backward stride
+      leftKnee.rotation.x = Math.max(0, -Math.sin(walkCycle) * 0.45);
+      rightKnee.rotation.x = Math.max(0, Math.sin(walkCycle) * 0.45);
+
+      // Pelvis vertical bounce
+      pelvis.position.y = 0.92 + Math.abs(Math.sin(walkCycle)) * 0.04;
+
+      // Arm swing
+      leftShoulder.rotation.x = -Math.sin(walkCycle) * 0.4;
+      if (isEquipped) {
+        // Holding wand steadily with slight bounce
+        rightShoulder.rotation.x = -0.7 + Math.sin(walkCycle) * 0.06;
+      } else {
+        rightShoulder.rotation.x = Math.sin(walkCycle) * 0.4;
+      }
+    } else {
+      // Idle pose
+      leftHip.rotation.x = THREE.MathUtils.lerp(leftHip.rotation.x, 0, 0.1);
+      rightHip.rotation.x = THREE.MathUtils.lerp(rightHip.rotation.x, -0.08, 0.1);
+      leftKnee.rotation.x = THREE.MathUtils.lerp(leftKnee.rotation.x, 0, 0.1);
+      rightKnee.rotation.x = THREE.MathUtils.lerp(rightKnee.rotation.x, 0, 0.1);
+      pelvis.position.y = THREE.MathUtils.lerp(pelvis.position.y, 0.92, 0.1);
+
       // Gentle breathing on spine
       spine.position.y = 0.16 + Math.sin(time * 2.0) * 0.005;
       spine.rotation.x = Math.sin(time * 2.0) * 0.015;
 
       // Subtle wand stabilization sway in right arm
-      rightShoulder.rotation.x = -0.7 + Math.sin(time * 1.5) * 0.02;
-      rightShoulder.rotation.z = 0.1 + Math.cos(time * 1.5) * 0.015;
+      if (isEquipped) {
+        rightShoulder.rotation.x = -0.7 + Math.sin(time * 1.5) * 0.02;
+        rightShoulder.rotation.z = 0.1 + Math.cos(time * 1.5) * 0.015;
+      } else {
+        rightShoulder.rotation.x = THREE.MathUtils.lerp(rightShoulder.rotation.x, 0, 0.1);
+        rightShoulder.rotation.z = THREE.MathUtils.lerp(rightShoulder.rotation.z, 0, 0.1);
+      }
 
       // Relaxed left arm subtle swing
       leftShoulder.rotation.x = Math.cos(time * 1.8) * 0.03;
@@ -247,6 +280,8 @@ export function createCharacter() {
     rightHand,
     leftHip,
     rightHip,
+    leftKnee,
+    rightKnee,
     eyeHeight: 1.62,
     updateAnimation
   };

@@ -3,45 +3,50 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Little Wash Crew - Level 1 Garage Preview</title>
+    <title>Little Wash Crew - Gameplay Prototype</title>
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
     <div id="app"></div>
+
+    <!-- Center screen crosshair for first-person aiming -->
+    <div id="crosshair"></div>
+
+    <!-- Interaction prompt banner (Shows when near washer cart) -->
+    <div id="interaction-banner" class="hidden">
+      <span id="interaction-text">[E] Pick Up Pressure Washer Gun</span>
+    </div>
+
+    <!-- HUD Overlay -->
     <div id="ui-overlay">
       <div class="hud-panel">
         <div class="hud-header">
           <h1>Little Wash Crew</h1>
-          <span class="badge">Level 1: The Sedan Bay</span>
+          <span class="badge">Gameplay Mode</span>
         </div>
-        <p class="subtitle">Stylized Car Wash Simulation</p>
+        <p class="subtitle">Level 1: Sedan Wash Bay</p>
 
         <div class="camera-mode-card">
-          <span class="mode-label">CURRENT CAMERA MODE:</span>
-          <span id="current-view-text" class="mode-value">Third-Person (Over-the-Shoulder)</span>
+          <span class="mode-label">ACTIVE CAMERA MODE:</span>
+          <span id="current-view-text" class="mode-value">Third-Person Player View</span>
         </div>
 
         <div class="controls-box">
-          <button id="toggle-cam-btn" class="primary-btn">Switch to: First-Person View</button>
-          <button id="orbit-inspect-btn" class="secondary-btn">Free Inspect Camera (Orbit)</button>
+          <button id="toggle-cam-btn" class="primary-btn">Switch to: First-Person View [V]</button>
+          <button id="pointer-lock-btn" class="secondary-btn">Click to Lock Mouse Aim</button>
         </div>
 
-        <div class="guide-box">
-          <div class="guide-item">
-            <span class="key">Third-Person:</span>
-            <span>Frames crew member & spray gun behind car</span>
-          </div>
-          <div class="guide-item">
-            <span class="key">First-Person:</span>
-            <span>Eye-level view with handheld spray lance</span>
-          </div>
-          <div class="guide-item">
-            <span class="key">Free Inspect:</span>
-            <span>Left-click & drag mouse to rotate around bay</span>
-          </div>
+        <div class="controls-guide">
+          <div class="guide-row"><b>W, A, S, D:</b> Walk in 4 directions</div>
+          <div class="guide-row"><b>Mouse Look:</b> Rotate camera / aim</div>
+          <div class="guide-row"><b>Left Click Hold:</b> Spray high-pressure water</div>
+          <div class="guide-row"><b>E:</b> Equip / Dock spray gun near cart</div>
+          <div class="guide-row"><b>V:</b> Toggle First / Third person</div>
+          <div class="guide-row"><b>Esc:</b> Release mouse cursor</div>
         </div>
       </div>
     </div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

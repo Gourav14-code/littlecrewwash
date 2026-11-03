@@ -177,3 +177,4 @@ export function createWaterSpray(scene, collidableObjects = []) {
     getHitInfo: () => latestHit
   };
 }
+

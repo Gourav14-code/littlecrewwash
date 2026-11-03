@@ -288,3 +288,4 @@ export class PlayerController {
     return this.isEquipped ? '[E] Dock Pressure Washer Gun' : '[E] Pick Up Pressure Washer Gun';
   }
 }
+
